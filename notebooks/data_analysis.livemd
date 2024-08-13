@@ -1,0 +1,75 @@
+# exploratory data analysis
+
+```elixir
+Mix.install([
+  {:axon, ">= 0.6"},
+  {:exla, "~> 0.6"},
+])
+```
+
+## exploring the whole dataset
+
+```elixir
+defmodule Pluvius.Weather do
+  # tind: temperature in day
+  # hind: humidity in day
+  # dpint: dew point in day
+  # pint: pressure in day
+  def convert_date(date) do
+      date
+      |> String.split("/")
+      |> Enum.reverse()
+      |> Enum.join("-")
+      |> Date.from_iso8601()
+  end
+  
+  def convert_float(""), do: {:ok, nil}
+  def convert_float(n) do
+    try do
+      {:ok, String.to_float(n)}
+    rescue
+      _ in ArgumentError -> {:error, :failed_to_convert}
+    end
+  end
+end
+```
+
+```elixir
+require Explorer.DataFrame, as: DF
+```
+
+```elixir
+dataframe = Explorer.DataFrame.new(dataset)
+```
+
+## plotting each column
+
+<!-- livebook:{"branch_parent_index":1} -->
+
+## temperature in day
+
+<!-- livebook:{"attrs":"eyJjaGFydF90aXRsZSI6ImJveHBsb3QiLCJoZWlnaHQiOjMwMCwibGF5ZXJzIjpbeyJhY3RpdmUiOnRydWUsImNoYXJ0X3R5cGUiOiJib3hwbG90IiwiY29sb3JfZmllbGQiOm51bGwsImNvbG9yX2ZpZWxkX2FnZ3JlZ2F0ZSI6bnVsbCwiY29sb3JfZmllbGRfYmluIjpudWxsLCJjb2xvcl9maWVsZF9zY2FsZV9zY2hlbWUiOm51bGwsImNvbG9yX2ZpZWxkX3R5cGUiOm51bGwsImRhdGFfdmFyaWFibGUiOiJkYXRhc2V0IiwiZ2VvZGF0YV9jb2xvciI6ImJsdWUiLCJsYXRpdHVkZV9maWVsZCI6bnVsbCwibG9uZ2l0dWRlX2ZpZWxkIjpudWxsLCJ4X2ZpZWxkIjpudWxsLCJ4X2ZpZWxkX2FnZ3JlZ2F0ZSI6bnVsbCwieF9maWVsZF9iaW4iOm51bGwsInhfZmllbGRfc2NhbGVfdHlwZSI6bnVsbCwieF9maWVsZF90eXBlIjpudWxsLCJ5X2ZpZWxkIjoidGluZCIsInlfZmllbGRfYWdncmVnYXRlIjpudWxsLCJ5X2ZpZWxkX2JpbiI6bnVsbCwieV9maWVsZF9zY2FsZV90eXBlIjpudWxsLCJ5X2ZpZWxkX3R5cGUiOiJxdWFudGl0YXRpdmUifV0sInZsX2FsaWFzIjoiRWxpeGlyLlZlZ2FMaXRlIiwid2lkdGgiOjgwMH0","chunks":null,"kind":"Elixir.KinoVegaLite.ChartCell","livebook_object":"smart_cell"} -->
+
+```elixir
+VegaLite.new(width: 800, height: 300, title: "boxplot")
+|> VegaLite.data_from_values(dataset, only: ["tind"])
+|> VegaLite.mark(:boxplot)
+|> VegaLite.encode_field(:y, "tind", type: :quantitative)
+```
+
+<!-- livebook:{"branch_parent_index":1} -->
+
+## temperature max
+
+<!-- livebook:{"attrs":"eyJjaGFydF90aXRsZSI6ImJveHBsb3QiLCJoZWlnaHQiOjMwMCwibGF5ZXJzIjpbeyJhY3RpdmUiOnRydWUsImNoYXJ0X3R5cGUiOiJib3hwbG90IiwiY29sb3JfZmllbGQiOm51bGwsImNvbG9yX2ZpZWxkX2FnZ3JlZ2F0ZSI6bnVsbCwiY29sb3JfZmllbGRfYmluIjpudWxsLCJjb2xvcl9maWVsZF9zY2FsZV9zY2hlbWUiOm51bGwsImNvbG9yX2ZpZWxkX3R5cGUiOm51bGwsImRhdGFfdmFyaWFibGUiOiJkYXRhc2V0IiwiZ2VvZGF0YV9jb2xvciI6ImJsdWUiLCJsYXRpdHVkZV9maWVsZCI6bnVsbCwibG9uZ2l0dWRlX2ZpZWxkIjpudWxsLCJ4X2ZpZWxkIjpudWxsLCJ4X2ZpZWxkX2FnZ3JlZ2F0ZSI6bnVsbCwieF9maWVsZF9iaW4iOm51bGwsInhfZmllbGRfc2NhbGVfdHlwZSI6bnVsbCwieF9maWVsZF90eXBlIjpudWxsLCJ5X2ZpZWxkIjoidG1heCIsInlfZmllbGRfYWdncmVnYXRlIjpudWxsLCJ5X2ZpZWxkX2JpbiI6bnVsbCwieV9maWVsZF9zY2FsZV90eXBlIjpudWxsLCJ5X2ZpZWxkX3R5cGUiOiJxdWFudGl0YXRpdmUifV0sInZsX2FsaWFzIjoiRWxpeGlyLlZlZ2FMaXRlIiwid2lkdGgiOjgwMH0","chunks":null,"kind":"Elixir.KinoVegaLite.ChartCell","livebook_object":"smart_cell"} -->
+
+```elixir
+VegaLite.new(width: 800, height: 300, title: "boxplot")
+|> VegaLite.data_from_values(dataset, only: ["tmax"])
+|> VegaLite.mark(:boxplot)
+|> VegaLite.encode_field(:y, "tmax", type: :quantitative)
+```
+
+```elixir
+dataframe
+```
