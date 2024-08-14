@@ -26,7 +26,8 @@ defmodule Pluvius.MixProject do
       {:flow, "~> 1.2"},
       {:axon, "~> 0.6.1"},
       {:explorer, "~> 0.9"},
-      {:nx, "~> 0.7.3"}
+      {:nx, "~> 0.7.3"},
+      {:exla, "~> 0.7.3"}
     ]
   end
 end
