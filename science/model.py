@@ -71,9 +71,8 @@ section("searching for better params with grid search...")
 param_grid = {'n_estimators': [50, 100, 150, 200], 'max_depth': [5, 10, 15, 20]}
 grid_search = GridSearchCV(estimator=RandomForestRegressor(), param_grid=param_grid, cv=5)
 grid_search.fit(X_train, y_train)
-section("best parameters: ", grid_search.best_params_)
+section(f"best parameters: {grid_search.best_params_}")
 
-section()
 section("training...")
 rf = RandomForestRegressor(n_estimators=grid_search.best_params_['n_estimators'], max_depth=grid_search.best_params_['max_depth'])
 rf.fit(X_train, y_train)
