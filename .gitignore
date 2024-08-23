@@ -24,3 +24,10 @@ pluvius-*.tar
 
 # Temporary files, for example, from tests.
 /tmp/
+
+/target/
+
+
+# Added by cargo
+
+/target

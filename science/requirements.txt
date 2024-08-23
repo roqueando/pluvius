@@ -1,0 +1,4 @@
+matplotlib==3.9.2
+pandas==2.2.2
+scikit-learn==1.5.1
+skl2onnx==1.17.0
