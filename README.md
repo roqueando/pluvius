@@ -1,8 +1,6 @@
-# Pluvius
+![pluvius](images/pluvius.png)
 
 ![GitHub Issues or Pull Requests](https://img.shields.io/github/issues-pr/roqueando/pluvius)
-
-![pluvius](images/pluvius.png)
 
 > Pluvius is a simple rain predict app for machine learning engineering studies purpose
 
