@@ -67,16 +67,17 @@ y = df[LABEL_COL]
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 section(f"X_train length: {len(X_train)}, X_test len: {len(X_test)}")
 
-section("searching for better params with grid search...")
+#section("searching for better params with grid search...")
 param_grid = {'n_estimators': [50, 100, 150, 200], 'max_depth': [5, 10, 15, 20]}
-grid_search = GridSearchCV(estimator=RandomForestRegressor(), param_grid=param_grid, cv=5)
-grid_search.fit(X_train, y_train)
-section(f"best parameters: {grid_search.best_params_}")
+#grid_search = GridSearchCV(estimator=RandomForestRegressor(), param_grid=param_grid, cv=5)
+#grid_search.fit(X_train, y_train)
+#section(f"best parameters: {grid_search.best_params_}")
 
 section("training...")
-rf = RandomForestRegressor(n_estimators=grid_search.best_params_['n_estimators'], max_depth=grid_search.best_params_['max_depth'])
+rf = RandomForestRegressor(n_estimators=50, max_depth=15)
 rf.fit(X_train, y_train)
-onx = to_onnx(rf, X_train[:1])
+t = X_train[:1].values[0]
+onx = to_onnx(rf, t)
 with open("rf_pluvius.onnx", "wb") as f:
     f.write(onx.SerializeToString())
 
@@ -91,5 +92,5 @@ real_df = clean(real_df)
 
 X_real = real_df[FEATURE_COLUMNS]
 real_pred = rf.predict(X_real)
-real_df['Previsao Chuva (mm)'] = y_real_pred
+real_df['Previsao Chuva (mm)'] = real_pred
 print(real_df)
