@@ -67,18 +67,18 @@ y = df[LABEL_COL]
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 section(f"X_train length: {len(X_train)}, X_test len: {len(X_test)}")
 
-#section("searching for better params with grid search...")
-param_grid = {'n_estimators': [50, 100, 150, 200], 'max_depth': [5, 10, 15, 20]}
-#grid_search = GridSearchCV(estimator=RandomForestRegressor(), param_grid=param_grid, cv=5)
-#grid_search.fit(X_train, y_train)
-#section(f"best parameters: {grid_search.best_params_}")
+section("searching for better params with grid search...")
+param_grid = {'n_estimators': [10, 25, 50, 100, 150, 200], 'max_depth': [2, 5, 10, 15, 20, 30, 45]}
+grid_search = GridSearchCV(estimator=RandomForestRegressor(), param_grid=param_grid, cv=5)
+grid_search.fit(X_train, y_train)
+section(f"best parameters: {grid_search.best_params_}")
 
 section("training...")
-rf = RandomForestRegressor(n_estimators=50, max_depth=15)
+rf = RandomForestRegressor(n_estimators=100, max_depth=20)
 rf.fit(X_train, y_train)
 t = X_train[:1].values[0]
 onx = to_onnx(rf, t)
-with open("rf_pluvius.onnx", "wb") as f:
+with open("rf_pluvius_v2.onnx", "wb") as f:
     f.write(onx.SerializeToString())
 
 section("testing...")
