@@ -4,6 +4,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import GridSearchCV
 from skl2onnx import to_onnx
+import numpy as np
+from pickle import dump
 
 FEATURE_COLUMNS = [
     'Temp. Ins. (C)', 'Temp. Max. (C)', 'Temp. Min. (C)',
@@ -30,6 +32,12 @@ def clean(df):
     datetime_cols = ['Data', 'Hora (UTC)']
     fill_cols = [col for col in df.columns if col not in datetime_cols]
     df[fill_cols] = df[fill_cols].fillna(df[fill_cols].mean())
+    return df
+
+def cast(df):
+    datetime_cols = ['Data', 'Hora (UTC)']
+    fill_cols = [col for col in df.columns if col not in datetime_cols]
+    df[fill_cols] = df[fill_cols].transform(lambda x: x.astype(np.float32))
     return df
 
 section("starting data cleaning")
@@ -61,6 +69,9 @@ section("cleaning nullables...")
 df = clean(df)
 section("dataframe cleaned!")
 
+df = cast(df)
+section("dataframe casted!")
+
 section("splitting data...")
 X = df[FEATURE_COLUMNS]
 y = df[LABEL_COL]
@@ -78,8 +89,9 @@ rf = RandomForestRegressor(n_estimators=100, max_depth=20)
 rf.fit(X_train, y_train)
 t = X_train[:1].values[0]
 onx = to_onnx(rf, t)
-with open("rf_pluvius_v3.onnx", "wb") as f:
-    f.write(onx.SerializeToString())
+with open("rf_pluvius.pkl", "wb") as f:
+    dump(rf, f, protocol=5)
+    #f.write(onx.SerializeToString())
 
 section("testing...")
 pred = rf.predict(X_test)

@@ -2,9 +2,8 @@ use std::path::Path;
 use candle_core::{Tensor, DType, Device};
 use chrono::NaiveDate;
 use polars::prelude::*;
+use polars::error::PolarsResult;
  
-//"Data";"Hora (UTC)";"Temp. Ins. (C)";"Temp. Max. (C)";"Temp. Min. (C)";"Umi. Ins. (%)";"Umi. Max. (%)";"Umi. Min. (%)";"Pto Orvalho Ins. (C)";"Pto Orvalho Max. (C)";"Pto Orvalho Min. (C)";"Pressao Ins. (hPa)";"Pressao Max. (hPa)";"Pressao Min. (hPa)";"Vel. Vento (m/s)";"Dir. Vento (m/s)";"Raj. Vento (m/s)";"Radiacao (KJ/m²)";"Chuva (mm)"
-
 struct Weather {
     date: NaiveDate,
     time: String,
@@ -30,14 +29,42 @@ fn to_tensor(_data: Vec<Weather>) -> Tensor {
     todo!()
 }
 
+fn format_date(df: DataFrame) -> PolarsResult<DataFrame> {
+    let date = df.column("Data")?
+        .cast(&DataType::Datetime(
+                polars::datatypes::TimeUnit::Milliseconds,
+                None))?
+        .strftime("%Y-%m-%dT%H:%M:%SZ")?;
+
+    println!("{:?}", date);
+    Ok(df)
+}
+
 fn main() {
+    let feature_columns = vec![
+        "Temp. Ins. (C)", "Temp. Max. (C)", "Temp. Min. (C)",
+        "Umi. Ins. (%)",	"Umi. Max. (%)",	"Umi. Min. (%)",
+        "Pto Orvalho Ins. (C)",	"Pto Orvalho Max. (C)",	"Pto Orvalho Min. (C)",
+        "Pressao Ins. (hPa)",	"Pressao Max. (hPa)",	"Pressao Min. (hPa)",
+        "Vel. Vento (m/s)",	"Dir. Vento (m/s)",	"Raj. Vento (m/s)",
+        "Radiacao (KJ/m²)"
+    ];
+
+    let label_column = "Chuva (mm)";
+
     let model_path = Path::new("./science/rf_pluvius.onnx");
+    let data_path = Path::new("./data/real_data.csv");
+
     let model = candle_onnx::read_file(model_path);
 
-    let lazy = LazyCsvReader::new("./data/real_data.csv")
+    let df = LazyCsvReader::new(data_path)
         .with_has_header(true)
+        .with_separator(b';')
         .finish()
         .unwrap();
 
-    println!("{:?}", lazy);
+
+    let data = format_date(df.collect().unwrap()).unwrap();
+    //let data = df.collect().unwrap();
+    println!("{}", data);
 }
