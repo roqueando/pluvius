@@ -43,4 +43,6 @@ pluvius-*.tar
 #/target
 
 data/**/*.csv
+data/**/*.zip
 featurizer/dist-newstyle
+env

@@ -9,6 +9,7 @@
 
 the project still in development and the next updates will be coded in the following tasks:
 - [x] model training and ONNX saving
+- [x] create Dockerfile for featurizer
 - [ ] create a worker pipeline with haskell for preprocessing
 - [ ] create an evaluation API for prediction
 
@@ -26,16 +27,17 @@ For install `pluvius` first you need:
 
 - clone repository
 ```sh
-git clone https://github.com/roqueando/pluvius.git
+$ git clone https://github.com/roqueando/pluvius.git
 ```
 
 - build featurizer
 ```sh
-make build/featurizer
+$ make build/featurizer
 ```
+
 - create a virtualenv for python stuff
 ```sh
-make setup/python
+$ make setup/python
 ```
 
 - install python dependencies
