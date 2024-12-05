@@ -10,6 +10,7 @@
 the project still in development and the next updates will be coded in the following tasks:
 - [x] model training and ONNX saving
 - [x] create Dockerfile for featurizer
+- [x] create utils for downloading the INMET dataset
 - [ ] create a worker pipeline with haskell for preprocessing
 - [ ] create an evaluation API for prediction
 
@@ -40,39 +41,22 @@ $ make build/featurizer
 $ make setup/python
 ```
 
-- install python dependencies
-```sh
-make setup/dependencies
-```
-
 ## ☕using pluvius
 
 To use pluvius you will need the correct dataset, then use the download script to get the INMETBR dataset (for now I'm just using Brazilian data)
 ```sh
-python collect-dataset.py
+$ make download/dataset
 ```
+This will download, extract the zip file and merge into a single CSV for post-use.
 
 ### Running preprocessing
 Here we will need to pre process all dataset to fit into model, so we will run the preprocess dockerized app
 
 ```sh
-docker run -d --name preprocess pluvius/preprocess
+$ docker run -d --name preprocess pluvius/preprocess
 ```
-This will run the Haskell worker to find the csv 
+This will run the Haskell worker to find the csv on the `data/raw/<year>.csv` file and preprocess to put the processed CSV in the `data/processed` folder.
 
-- change directory to `science`, install dependencies and train the model
-```sh
-cd science
-pip install -r requirements.txt
-python model.py
-```
-it can be a little slower depending on your PC settings
-
-- more incoming of how to up the rust environment
-
-## ☕using pluvius 
-
-- still working... :D
 
 ## 😄 be a contributor 
 
