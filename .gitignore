@@ -32,6 +32,9 @@ pluvius-*.tar
 
 /target
 
+.ropeproject
+
+
 
 # Added by cargo
 #
@@ -39,19 +42,5 @@ pluvius-*.tar
 
 #/target
 
-
-# Added by cargo
-#
-# already existing elements were commented out
-
-#/target
-
-
-# Added by cargo
-#
-# already existing elements were commented out
-
-#/target
-data/evaluation/*
-data/processed/*
-data/raw/*
+data/**/*.csv
+featurizer/dist-newstyle
