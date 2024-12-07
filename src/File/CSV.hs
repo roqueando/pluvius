@@ -52,16 +52,6 @@ decodeCSV = do
     Right (_, v) -> do
       CC.yieldMany $ V.toList v
 
-filterAllThatRains :: (MonadIO m) => ConduitT [Weather] [Weather] m ()
-filterAllThatRains = do
-  weathers <- await
-  case weathers of
-    Nothing -> return ()
-    Just w -> yield (filter (\x -> precipitation x >= (0.0 :: Float)) w)
-  where
-    precipitation (Weather {rain = Nothing}) = 0.0
-    precipitation (Weather {rain = Just rx}) = rx
-
 limitPrint :: (MonadIO m) => ConduitT Weather Void m ()
 limitPrint = CC.mapM_ $ \weather -> do
   liftIO $ print weather
@@ -72,5 +62,8 @@ run = do
   runConduitRes $
     CC.sourceFile "./data/raw/2019.csv"
       .| decodeCSV
-      -- .| filterAllThatRains
-      .| limitPrint
+      .| CC.filter precipitation
+      .| CC.sinkNull
+  where
+    precipitation (Weather {rain = Nothing}) = False
+    precipitation (Weather {rain = Just rx}) = rx >= 0.0
