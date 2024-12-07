@@ -2,7 +2,7 @@ build/feature-extractor:
 	docker build . -t pluvius/feature-extractor:0.0.1 -f Dockerfile
 
 run/feature-extractor:
-	docker run -v $(file):/app/$(file) pluvius/feature-extractor:0.0.1
+	docker run -v $(file):/app/$(file):ro pluvius/feature-extractor:0.0.1
 
 setup/python:
 	python -m venv env
