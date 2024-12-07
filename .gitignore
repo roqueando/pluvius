@@ -44,5 +44,7 @@ pluvius-*.tar
 
 data/**/*.csv
 data/**/*.zip
-featurizer/dist-newstyle
+data/**/*
+dist-newstyle
 env
+.vscode

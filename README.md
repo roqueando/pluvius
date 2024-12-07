@@ -53,12 +53,12 @@ This will download, extract the zip file and merge into a single CSV for post-us
 Here we will need to pre process all dataset to fit into model, so we will run the preprocess dockerized app
 
 ```sh
-$ docker run -d --name preprocess pluvius/preprocess
+$ make run/feature-extractor file=./data/raw/2019.csv
 ```
-This will run the Haskell worker to find the csv on the `data/raw/<year>.csv` file and preprocess to put the processed CSV in the `data/processed` folder.
+Make sure that you have run the `make download/dataset` step to have the merged raw file in correct directory.
 
 
-## 😄 be a contributor 
+## 😄 be a contributor
 
 Want to be part of this project? Click [HERE](CONTRIBUTING.md) and read how to contribute
 

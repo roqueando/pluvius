@@ -1,8 +1,8 @@
-build/featurizer:
-	docker build . -t pluvius/featurizer:0.0.1 -f featurizer/Dockerfile
+build/feature-extractor:
+	docker build . -t pluvius/feature-extractor:0.0.1 -f Dockerfile
 
-run/featurizer:
-	docker run pluvius/featurizer:0.0.1
+run/feature-extractor:
+	docker run -v $(file):/app/$(file) pluvius/feature-extractor:0.0.1
 
 setup/python:
 	python -m venv env
