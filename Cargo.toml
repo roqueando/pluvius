@@ -1,0 +1,4 @@
+[workspace]
+members = ["feature-extractor"]
+
+resolver = "2"

@@ -8,17 +8,16 @@
 ### updates and improvements
 
 the project still in development and the next updates will be coded in the following tasks:
-- [x] model training and ONNX saving
-- [x] create Dockerfile for featurizer
+- [ ] create Dockerfile for feature-extractor
 - [x] create utils for downloading the INMET dataset
-- [ ] create a worker pipeline with haskell for preprocessing
-- [ ] create an evaluation API for prediction
+- [ ] create a worker pipeline with rust for preprocessing and save into data/processed directory
+- [ ] create an evaluation API for prediction (axum for the win)
 
 ## 💻 pre-requisites
 
 before start, verify if you have the following things:
 
-- you have installed the most recent version of [Haskell](https://haskell.com) and `cabal` (you can install it with [GHCup](https://www.haskell.org/ghcup/)) in your machine
+- you have installed the most recent version of [Rust](https://rust-lang.org) in your machine, you can use `rustup` to install it
 - you have installed the most recent version of `python`, `pip` in your machine
 - you have installed [Docker](https://docker.com) and docker compose
 
@@ -31,9 +30,9 @@ For install `pluvius` first you need:
 $ git clone https://github.com/roqueando/pluvius.git
 ```
 
-- build featurizer
+- build feature-extractor image
 ```sh
-$ make build/featurizer
+$ make build/feature-extractor
 ```
 
 - create a virtualenv for python stuff
