@@ -1,18 +1,24 @@
-FROM haskell:9.4.8-slim as builder
-
-WORKDIR /build
-
-COPY ./pluvius.cabal .
-COPY ./app ./app
-COPY ./src ./src
-
-ENV CABAL_DIR=/build
-RUN cabal update && cabal build --dependencies-only
-RUN cabal build
-RUN cabal install --installdir=.
-
-FROM debian:bullseye-slim
-
+FROM lukemathwalker/cargo-chef:latest-rust-1 AS chef
 WORKDIR /app
-COPY --from=builder /build/feature-extractor .
-CMD ["./feature-extractor"]
+
+FROM chef AS planner
+
+COPY ./feature-extractor ./feature-extractor
+COPY ./Cargo.lock ./Cargo.lock
+COPY ./Cargo.toml ./Cargo.toml
+
+RUN cargo chef prepare --recipe-path recipe.json
+
+FROM chef AS builder 
+COPY --from=planner /app/recipe.json recipe.json
+# Build dependencies - this is the caching Docker layer!
+RUN cargo chef cook --release --recipe-path recipe.json
+# Build application
+COPY . .
+RUN cargo build --release --bin feature-extractor
+
+# We do not need the Rust toolchain to run the binary!
+FROM debian:bookworm-slim AS runtime
+WORKDIR /app
+COPY --from=builder /app/target/release/feature-extractor /usr/local/bin
+ENTRYPOINT ["/usr/local/bin/feature-extractor"]
