@@ -1,7 +1,7 @@
 module FeatureExtractor.Types (Weather (..), EnrichedWeather(..)) where
 
 import qualified Data.Text as T
-import Data.Csv ((.:), FromNamedRecord(..))
+import Data.Csv ((.:), FromNamedRecord(..), ToNamedRecord(..))
 
 data Weather = Weather
   { date :: T.Text,
@@ -67,3 +67,32 @@ instance FromNamedRecord Weather where
       <*> r .: "dpmin"
       <*> r .: "hmax"
       <*> r .: "hmin"
+
+instance ToNamedRecord EnrichedWeather where
+  toNamedRecord r =
+    EnrichedWeather
+  <$> r .: day :: Int
+  <*> r .: month :: Int
+  <*> r .: year :: Int
+  <*> r .: eHour :: Int
+  <*> r .: minute :: Int
+  <*> r .: pMaxDom :: Float -- Min and Max by day of month (DoM)
+  <*> r .: pMinDom :: Float
+  <*> r .: tMaxDom :: Float
+  <*> r .: tMinDom :: Float
+  <*> r .: dpMaxDom :: Float
+  <*> r .: dpMinDom :: Float
+  <*> r .: hMaxDom :: Float
+  <*> r .: hMinDom :: Float
+  <*> r .: pDiff :: Float
+  <*> r .: tDiff :: Float
+  <*> r .: dpDiff :: Float
+  <*> r .: hDiff :: Float
+  <*> r .: pAvgMinDom :: Float
+  <*> r .: pAvgMaxDom :: Float
+  <*> r .: tAvgMinDom :: Float
+  <*> r .: tAvgMaxDom :: Float
+  <*> r .: dpAvgMinDom :: Float
+  <*> r .: dpAvgMaxDom :: Float
+  <*> r .: hAvgMinDom :: Float
+  <*> r .: hAvgMaxDom :: Float
