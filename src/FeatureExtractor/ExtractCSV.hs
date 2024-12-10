@@ -4,8 +4,8 @@ import qualified Data.ByteString as BS
 import qualified Data.Conduit.Combinators as CC
 
 import Data.Conduit.List (chunksOf)
-import Data.Conduit (ConduitT, runConduitRes, (.|), await)
-import FeatureExtractor.Types (Weather(..))
+import Data.Conduit (ConduitT, runConduitRes, (.|), await, yield)
+import FeatureExtractor.Types (Weather(..), EnrichedWeather(..))
 import Control.Monad.IO.Class (MonadIO (liftIO))
 import Data.Csv (decodeByName)
 import qualified Data.Vector as V
@@ -20,12 +20,12 @@ decodeCSV = do
     Right (_, v) -> do
       CC.yieldMany $ V.toList v
 
-parallelWeatherChunks :: (MonadIO m) => ConduitT [Weather] [Weather] m ()
+parallelWeatherChunks :: (MonadIO m) => ConduitT [Weather] [EnrichedWeather] m ()
 parallelWeatherChunks = do
   rowData <- await
   case rowData of
     Nothing -> return ()
-    Just w -> enrichWeather w
+    Just w -> yield $ enrichWeather w
 
 enrichWeather :: [Weather] -> [EnrichedWeather]
 enrichWeather = undefined
