@@ -1,6 +1,6 @@
 module Main where
 
-import File.CSV (run)
+import FeatureExtractor.ExtractCSV (run)
 
 main :: IO ()
 main = run
