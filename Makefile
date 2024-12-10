@@ -1,5 +1,5 @@
 build/feature-extractor:
-	docker build . -t pluvius/feature-extractor:0.0.1 -f Dockerfile
+	docker build . -t pluvius/feature-extractor:0.0.1 -f Dockerfile.feature-extractor
 
 run/feature-extractor:
 	docker run -v $(file):/app/$(file):ro pluvius/feature-extractor:0.0.1

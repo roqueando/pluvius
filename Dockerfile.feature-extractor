@@ -1,0 +1,22 @@
+FROM golang:1.23.4 as builder
+
+WORKDIR /app
+
+COPY ./go.mod .
+#COPY ./go.sum .
+
+#RUN go mod download
+
+COPY ./cmd/feature-extractor/ ./app/cmd/feature-extractor/
+COPY ./internal/ .
+
+RUN go build -o "/app/bin/feature-extractor" "./app/cmd/feature-extractor/"
+
+
+FROM debian:bullseye-slim
+
+WORKDIR /app
+
+COPY --from=builder /app/bin/feature-extractor .
+
+CMD ["/app/feature-extractor"]
