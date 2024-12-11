@@ -2,13 +2,13 @@
 
 Aqui eu vou tentar criar alguns itens TODO e descrever o que eu estou fazendo por features/hotfixes/releases.
 
-## feat/featurizer
+## migrate/gopher
 
-* [06.12.2024] Começando o featurizer, um worker haskell
-    - {EPIC} criar o pipeline worker em haskell para o preprocessamento do dataset
-        - [x] Tentar usar o Conduit para processar em streaming o CSV
+* [09.12.2024] Começando o pipeline em Go
+    - {EPIC} criar o pipeline worker em Go para o preprocessamento do dataset
+        - [ ] Tentar usar o encoding/csv e channels para processar em streaming o CSV
             - Levando em consideração que o tamanho mínimo desse dataset gira em torno de ~500MB
-        - [x] Primeira tentativa, printar as linhas ao ir processando os dados
+        - [ ] Primeira tentativa, printar as linhas ao ir processando os dados
 
 
 #### Descrição dos dados, marcaçãoo de quem vai ser usado
@@ -31,16 +31,13 @@ Aqui eu vou tentar criar alguns itens TODO e descrever o que eu estou fazendo po
 
 ### Limpeza dos dados
 
-Como a Data e Hora são datas temporais, elas precisam ser transformadas em números. Uma ideia que tenho é transforma-las
-em números UNIX Timestamp para que se tornem números escalares
+- [x] Como a Data e Hora são datas temporais, elas precisam ser transformadas em números. Uma ideia que tenho é transforma-las em números UNIX Timestamp para que se tornem números escalares. (Não faz sentido, o certo é o que vem abaixo)
+- [ ] Data e hora serão quebradas em partes sendo: dia, mês, ano, hora, minuto. Caso haja necessidade de escalar ou normalizar, se torna mais fácil.
 
-## Alteração do escopo, o projeto será um projeto haskell com utilitários python
-- [x] tentar passar os arquivos do cabal para o projeto raiz
+## Feature Engineering, cálculo de novas features baseadas nas features anteriores
 
-
-* [07.12.2024] Processamento dos dados
-    - [ ] {EPIC} criar o pipeline worker em haskell para o preprocessamento do dataset
-        - [x] O processamento come muita RAM na hora, suspeito que possa ser o print na tela
-        - [x] Ajustar para só processar e filtrar os dados sem printar nada na tela.
-
-* Descobri que ao usar as opções do GHC como `-threaded` e otimização, já consegue dar um ótimo resultado porém ainda não estou usando Haskell de forma paralela e nem concorrente.
+- [ ] One-Hot Encoding da Data
+- [ ] One-Hot Encoding da Hora
+- [ ] Agrupar por dia do mês e puxar mínimo e máximo de cada atributo e colocar como uma nova feature `{feature}_min(or_max)__by_day_in_month`
+- [ ] Agrupar por dia do mês e puxar a média da temperatura por dia do mês e colocar como uma nova feature `{feature}_avg_by_day_in_month`
+- [ ] {?maybe} Agrupar por dia do mês e puxar a diferença entre as features minima e máxima `{feature}_diff_by_day_in_month`

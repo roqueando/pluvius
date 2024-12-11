@@ -1,7 +1,14 @@
 package main
 
-import "fmt"
+import (
+	"pluvius/internal/feature_extractor"
+	"log"
+)
 
 func main() {
-	fmt.Println("Hello there")
+	err := feature_extractor.Run("../../data/raw/2019.csv")
+
+	if err != nil {
+		log.Fatal(err)
+	}
 }
