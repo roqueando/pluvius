@@ -1,13 +1,11 @@
 module FeatureExtractor.Types (Weather (..), EnrichedWeather (..)) where
 
-import Data.Csv (
-  FromNamedRecord (..),
-  ToRecord (..),
-  DefaultOrdered (..),
-  (.:),
-  record,
-  toField,
-  header
+import Data.Csv
+  ( FromNamedRecord (..),
+    ToRecord (..),
+    record,
+    toField,
+    (.:),
   )
 import qualified Data.Text as T
 
@@ -102,9 +100,3 @@ instance ToRecord EnrichedWeather where
           toField hAvgMinDom',
           toField hAvgMaxDom'
         ]
-instance DefaultOrdered EnrichedWeather where
-  headerOrder _ =
-    header
-      [ "day"
-      , ""
-      ]

@@ -1,9 +1,10 @@
 module FeatureExtractor.Transformer (transformDate, transformHour) where
 
-import FeatureExtractor.Types (Weather(..))
 import qualified Data.Text as T
+import FeatureExtractor.Types (Weather (..))
 
 type OneHotDate = Maybe (Int, Int, Int)
+
 type OneHotHour = Maybe (Int, Int)
 
 transformDate :: Weather -> OneHotDate
@@ -21,6 +22,5 @@ transformHour w = toTuple $ getHourAndMinute $ splitByWhitespace w
     splitByWhitespace = T.splitOn " " . hour
     getHourAndMinute spl = T.splitAt 2 (head spl)
 
-    toTuple :: (T.Text, T.Text) -> Maybe (a, a)
+    toTuple :: (T.Text, T.Text) -> Maybe (Int, Int)
     toTuple (x, y) = Just (read $ T.unpack x, read $ T.unpack y)
-    toTuple _ = Nothing
