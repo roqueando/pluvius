@@ -23,6 +23,7 @@ library
     import:           warnings, extensions
     exposed-modules:  FeatureExtractor.Types
                     , FeatureExtractor.ExtractCSV
+                    , FeatureExtractor.Transformer
 
     build-depends:    base ^>=4.17.2.1
                     , conduit

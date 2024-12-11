@@ -48,6 +48,7 @@ em números UNIX Timestamp para que se tornem números escalares
 ## Feature Engineering
 >## Calculando features a partir de features existentes
 
-- [  ] Agrupar por dia do mês e calcular o mínimo e máximo dos atributos -> `{feature}_min_dom`, `{feature}_max_dom` (dom == day of month)
-- [  ] Agrupar por dia do mês e calcular a diferença entre o minimo e o máximo do dia -> `{feature}_diff_dom`
-- [  ] Agrupar por dia do mês e calcular a média de mínimo e máximo dos atributos -> `{feature}_avg_min_dom`, `{feature}_avg_max_dom`
+- [ ] Transformar date em dia mes ano, a data vem nesse formato: `2019/01/01` (ano/mes/dia), só precisamos alterar para que ao invés de slashes, use traços
+- [ ] Agrupar por dia do mês e calcular o mínimo e máximo dos atributos -> `{feature}_min_dom`, `{feature}_max_dom` (dom == day of month)
+- [ ] Agrupar por dia do mês e calcular a diferença entre o minimo e o máximo do dia -> `{feature}_diff_dom`
+- [ ] Agrupar por dia do mês e calcular a média de mínimo e máximo dos atributos -> `{feature}_avg_min_dom`, `{feature}_avg_max_dom`

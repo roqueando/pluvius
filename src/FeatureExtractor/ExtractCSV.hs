@@ -23,13 +23,13 @@ decodeCSV = do
       CC.yieldMany $ V.toList v
 
 parallelWeatherChunks :: [Weather] -> [EnrichedWeather]
-parallelWeatherChunks chunk = map enrichWeather chunk `using` parListChunk 10 rpar
+parallelWeatherChunks chunk = map enrichWeather chunk `using` parListChunk 100 rpar
 
 enrichWeather :: Weather -> EnrichedWeather
-enrichWeather = undefined
+enrichWeather w = undefined
 
 encodeChunk :: [EnrichedWeather] -> BL.ByteString
-encodeChunk results = encode (map (\x -> [x :: EnrichedWeather]) results)
+encodeChunk = encode
 
 run :: IO ()
 run = do
@@ -37,7 +37,6 @@ run = do
     CC.sourceFile "./data/raw/2019.csv"
       .| decodeCSV
       .| chunksOf 1000
-      -- .| CC.filter precipitation -- this filter not is not going to work
       .| CC.map parallelWeatherChunks
       .| CC.map encodeChunk
       .| CC.map BL.toStrict

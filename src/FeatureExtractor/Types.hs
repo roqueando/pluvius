@@ -1,7 +1,15 @@
-module FeatureExtractor.Types (Weather (..), EnrichedWeather(..)) where
+module FeatureExtractor.Types (Weather (..), EnrichedWeather (..)) where
 
+import Data.Csv (
+  FromNamedRecord (..),
+  ToRecord (..),
+  DefaultOrdered (..),
+  (.:),
+  record,
+  toField,
+  header
+  )
 import qualified Data.Text as T
-import Data.Csv ((.:), FromNamedRecord(..), ToNamedRecord(..))
 
 data Weather = Weather
   { date :: T.Text,
@@ -19,38 +27,34 @@ data Weather = Weather
   deriving (Show)
 
 data EnrichedWeather = EnrichedWeather
-  { weather :: Weather
-  , day :: Int
-  , month :: Int
-  , year :: Int
-  , eHour :: Int
-  , minute :: Int
-
-  -- Min and Max by day of month (DoM)
-  , pMaxDom :: Float -- Min and Max by day of month (DoM)
-  , pMinDom :: Float
-  , tMaxDom :: Float
-  , tMinDom :: Float
-  , dpMaxDom :: Float
-  , dpMinDom :: Float
-  , hMaxDom :: Float
-  , hMinDom :: Float
-
-  -- Difference from Min Max by day of month
-  , pDiff :: Float
-  , tDiff :: Float
-  , dpDiff :: Float
-  , hDiff :: Float
-
-  -- Average (mean) from min max by day of month
-  , pAvgMinDom :: Float
-  , pAvgMaxDom :: Float
-  , tAvgMinDom :: Float
-  , tAvgMaxDom :: Float
-  , dpAvgMinDom :: Float
-  , dpAvgMaxDom :: Float
-  , hAvgMinDom :: Float
-  , hAvgMaxDom :: Float
+  { day :: Int,
+    month :: Int,
+    year :: Int,
+    eHour :: Int,
+    minute :: Int,
+    -- Min and Max by day of month (DoM)
+    pMaxDom :: Float, -- Min and Max by day of month (DoM)
+    pMinDom :: Float,
+    tMaxDom :: Float,
+    tMinDom :: Float,
+    dpMaxDom :: Float,
+    dpMinDom :: Float,
+    hMaxDom :: Float,
+    hMinDom :: Float,
+    -- Difference from Min Max by day of month
+    pDiff :: Float,
+    tDiff :: Float,
+    dpDiff :: Float,
+    hDiff :: Float,
+    -- Average (mean) from min max by day of month
+    pAvgMinDom :: Float,
+    pAvgMaxDom :: Float,
+    tAvgMinDom :: Float,
+    tAvgMaxDom :: Float,
+    dpAvgMinDom :: Float,
+    dpAvgMaxDom :: Float,
+    hAvgMinDom :: Float,
+    hAvgMaxDom :: Float
   }
 
 instance FromNamedRecord Weather where
@@ -68,31 +72,39 @@ instance FromNamedRecord Weather where
       <*> r .: "hmax"
       <*> r .: "hmin"
 
-instance ToNamedRecord EnrichedWeather where
-  toNamedRecord r =
-    EnrichedWeather
-  <$> r .: day :: Int
-  <*> r .: month :: Int
-  <*> r .: year :: Int
-  <*> r .: eHour :: Int
-  <*> r .: minute :: Int
-  <*> r .: pMaxDom :: Float -- Min and Max by day of month (DoM)
-  <*> r .: pMinDom :: Float
-  <*> r .: tMaxDom :: Float
-  <*> r .: tMinDom :: Float
-  <*> r .: dpMaxDom :: Float
-  <*> r .: dpMinDom :: Float
-  <*> r .: hMaxDom :: Float
-  <*> r .: hMinDom :: Float
-  <*> r .: pDiff :: Float
-  <*> r .: tDiff :: Float
-  <*> r .: dpDiff :: Float
-  <*> r .: hDiff :: Float
-  <*> r .: pAvgMinDom :: Float
-  <*> r .: pAvgMaxDom :: Float
-  <*> r .: tAvgMinDom :: Float
-  <*> r .: tAvgMaxDom :: Float
-  <*> r .: dpAvgMinDom :: Float
-  <*> r .: dpAvgMaxDom :: Float
-  <*> r .: hAvgMinDom :: Float
-  <*> r .: hAvgMaxDom :: Float
+instance ToRecord EnrichedWeather where
+  toRecord
+    (EnrichedWeather day' month' year' eHour' minute' pMaxDom' pMinDom' tMaxDom' tMinDom' dpMaxDom' dpMinDom' hMaxDom' hMinDom' pDiff' tDiff' dpDiff' hDiff' pAvgMinDom' pAvgMaxDom' tAvgMinDom' tAvgMaxDom' dpAvgMinDom' dpAvgMaxDom' hAvgMinDom' hAvgMaxDom') =
+      record
+        [ toField day',
+          toField month',
+          toField year',
+          toField eHour',
+          toField minute',
+          toField pMaxDom',
+          toField pMinDom',
+          toField tMaxDom',
+          toField tMinDom',
+          toField dpMaxDom',
+          toField dpMinDom',
+          toField hMaxDom',
+          toField hMinDom',
+          toField pDiff',
+          toField tDiff',
+          toField dpDiff',
+          toField hDiff',
+          toField pAvgMinDom',
+          toField pAvgMaxDom',
+          toField tAvgMinDom',
+          toField tAvgMaxDom',
+          toField dpAvgMinDom',
+          toField dpAvgMaxDom',
+          toField hAvgMinDom',
+          toField hAvgMaxDom'
+        ]
+instance DefaultOrdered EnrichedWeather where
+  headerOrder _ =
+    header
+      [ "day"
+      , ""
+      ]
