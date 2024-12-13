@@ -45,10 +45,11 @@ em números UNIX Timestamp para que se tornem números escalares
 
 * Descobri que ao usar as opções do GHC como `-threaded` e otimização, já consegue dar um ótimo resultado porém ainda não estou usando Haskell de forma paralela e nem concorrente.
 
-## Feature Engineering
+## Feature Engineering (em python)
 >## Calculando features a partir de features existentes
 
-- [ ] Transformar date em dia mes ano, a data vem nesse formato: `2019/01/01` (ano/mes/dia), só precisamos alterar para que ao invés de slashes, use traços
+- [x] Transformar date em dia mes ano, a data vem nesse formato: `2019/01/01` (ano/mes/dia), só precisamos alterar para que ao invés de slashes, use traços
+- [x] Transformar hour em hora e minuto
 - [ ] Agrupar por dia do mês e calcular o mínimo e máximo dos atributos -> `{feature}_min_dom`, `{feature}_max_dom` (dom == day of month)
 - [ ] Agrupar por dia do mês e calcular a diferença entre o minimo e o máximo do dia -> `{feature}_diff_dom`
 - [ ] Agrupar por dia do mês e calcular a média de mínimo e máximo dos atributos -> `{feature}_avg_min_dom`, `{feature}_avg_max_dom`
