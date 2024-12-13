@@ -36,8 +36,18 @@ Aqui eu vou tentar criar alguns itens TODO e descrever o que eu estou fazendo po
 
 ## Feature Engineering, cálculo de novas features baseadas nas features anteriores
 
-- [ ] One-Hot Encoding da Data
-- [ ] One-Hot Encoding da Hora
-- [ ] Agrupar por dia do mês e puxar mínimo e máximo de cada atributo e colocar como uma nova feature `{feature}_min(or_max)__by_day_in_month`
-- [ ] Agrupar por dia do mês e puxar a média da temperatura por dia do mês e colocar como uma nova feature `{feature}_avg_by_day_in_month`
-- [ ] {?maybe} Agrupar por dia do mês e puxar a diferença entre as features minima e máxima `{feature}_diff_by_day_in_month`
+
+* [07.12.2024] Processamento dos dados
+    - [ ] {EPIC} criar o pipeline worker em haskell para o preprocessamento do dataset
+        - [x] O processamento come muita RAM na hora, suspeito que possa ser o print na tela
+        - [x] Ajustar para só processar e filtrar os dados sem printar nada na tela.
+
+* Descobri que ao usar as opções do GHC como `-threaded` e otimização, já consegue dar um ótimo resultado porém ainda não estou usando Haskell de forma paralela e nem concorrente.
+
+## Feature Engineering (em python)
+>## Calculando features a partir de features existentes
+
+- [ ] Transformar date em dia mes ano, a data vem nesse formato: `2019/01/01` (ano/mes/dia), só precisamos alterar para que ao invés de slashes, use traços
+- [ ] Agrupar por dia do mês e calcular o mínimo e máximo dos atributos -> `{feature}_min_dom`, `{feature}_max_dom` (dom == day of month)
+- [ ] Agrupar por dia do mês e calcular a diferença entre o minimo e o máximo do dia -> `{feature}_diff_dom`
+- [ ] Agrupar por dia do mês e calcular a média de mínimo e máximo dos atributos -> `{feature}_avg_min_dom`, `{feature}_avg_max_dom`
