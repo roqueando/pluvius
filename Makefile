@@ -1,3 +1,6 @@
+include makefiles/feature-extractor/build.mk
+include makefiles/feature-extractor/run.mk
+
 build/feature-extractor:
 	docker build . -t pluvius/feature-extractor:0.0.1 -f Dockerfile
 
