@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  feature_store:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: pluvius
+      POSTGRES_PASSWORD: local_password
+      POSTGRES_DB: raw
+    ports:
+      - '5432:5432'
+
