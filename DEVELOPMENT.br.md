@@ -35,6 +35,26 @@ Aqui eu vou tentar criar alguns itens TODO e descrever o que eu estou fazendo po
 Como a Data e Hora são datas temporais, elas precisam ser transformadas em números. Uma ideia que tenho é transforma-las
 em números UNIX Timestamp para que se tornem números escalares
 
-## Alteração do escopo, o projeto será um projeto RUST com utilitários python
-- [ ] cargo init
-- [ ] criar binários usando o cargo workspace para melhor separação
+## Alteração do escopo, o projeto será um projeto haskell com utilitários python
+- [x] tentar passar os arquivos do cabal para o projeto raiz
+
+
+* [07.12.2024] Processamento dos dados
+    - [ ] {EPIC} criar o pipeline worker em haskell para o preprocessamento do dataset
+        - [x] O processamento come muita RAM na hora, suspeito que possa ser o print na tela
+        - [x] Ajustar para só processar e filtrar os dados sem printar nada na tela.
+
+* Descobri que ao usar as opções do GHC como `-threaded` e otimização, já consegue dar um ótimo resultado porém ainda não estou usando Haskell de forma paralela e nem concorrente.
+
+## Feature Engineering (em python)
+>## Calculando features a partir de features existentes
+
+One Hot Encoding fazer por final
+- [x] Transformar date em dia mes ano, a data vem nesse formato: `2019/01/01` (ano/mes/dia), só precisamos alterar para que ao invés de slashes, use traços
+- [x] Transformar hour em hora e minuto
+
+- [ ] Agrupar por dia do mês e calcular o mínimo e máximo dos atributos -> `{feature}_min_dom`, `{feature}_max_dom` (dom == day of month)
+- [ ] Agrupar por dia do mês e calcular a diferença entre o minimo e o máximo do dia -> `{feature}_diff_dom`
+- [ ] Agrupar por dia do mês e calcular a média de mínimo e máximo dos atributos -> `{feature}_avg_min_dom`, `{feature}_avg_max_dom`
+
+    df = pd.read_sql_table("2019_enriched", 'postgresql://pluvius:local_password@localhost:5432/raw')
