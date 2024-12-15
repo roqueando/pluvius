@@ -101,7 +101,6 @@ def main():
         'dpdiff',
         'hdiff'
     ])
-    print(new_df.isnull().sum())
 
 
 if __name__ == "__main__":

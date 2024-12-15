@@ -52,8 +52,8 @@ One Hot Encoding fazer por final
 - [x] Transformar date em dia mes ano, a data vem nesse formato: `2019/01/01` (ano/mes/dia), só precisamos alterar para que ao invés de slashes, use traços
 - [x] Transformar hour em hora e minuto
 
-- [ ] Agrupar por dia do mês e calcular o mínimo e máximo dos atributos -> `{feature}_min_dom`, `{feature}_max_dom` (dom == day of month)
-- [ ] Agrupar por dia do mês e calcular a diferença entre o minimo e o máximo do dia -> `{feature}_diff_dom`
-- [ ] Agrupar por dia do mês e calcular a média de mínimo e máximo dos atributos -> `{feature}_avg_min_dom`, `{feature}_avg_max_dom`
+- [x] Agrupar por dia do mês e calcular a diferença entre o minimo e o máximo do dia -> `{feature}_diff_dom`
+- [x] Agrupar por dia do mês e calcular a média de mínimo e máximo dos atributos -> `{feature}_avg_min_dom`, `{feature}_avg_max_dom`
 
-    df = pd.read_sql_table("2019_enriched", 'postgresql://pluvius:local_password@localhost:5432/raw')
+### Dados enriquecidos, agora pré processamento por batches
+Percebi que a ideia que estou implementando não é uma pesquisa num jupyter notebook da vida, e sim de fato o projeto real ja sendo "produtizado", porém como não tenho o modelo pronto, irei puxar via batches e usar uma flag para controlar o fluxo do pipeline.
