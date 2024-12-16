@@ -22,7 +22,7 @@ defmodule Pluvius.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:mongo, "~> 0.5.4"}
+      {:mongodb_driver, "~> 1.5.0"}
       # {:dep_from_hexpm, "~> 0.3.0"},
       #
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}
