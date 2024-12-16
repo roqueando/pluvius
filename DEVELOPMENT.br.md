@@ -57,3 +57,10 @@ One Hot Encoding fazer por final
 
 ### Dados enriquecidos, agora pré processamento por batches
 Percebi que a ideia que estou implementando não é uma pesquisa num jupyter notebook da vida, e sim de fato o projeto real ja sendo "produtizado", porém como não tenho o modelo pronto, irei puxar via batches e usar uma flag para controlar o fluxo do pipeline.
+
+Então vamos separar em etapas.
+
+1. [x] Adicionar no docker-compose o mongo db como banco de feature store
+2. [  ] Criar a query para puxar os dados para criar o enriched via Haskell
+    - Para fazer isso posso criar funções diferentes para fazer queries e aggregates, tendo como base [esse script](scripts/mongo_enrich.js)
+3. [  ] Ajustar o utils de download dataset do python para armazenar o dataset num mongodb

@@ -7,7 +7,8 @@ import Data.Csv
     toField,
     (.:),
   )
-import qualified Data.Text as T
+import qualified RIO.Text as T
+import RIO
 
 data Weather = Weather
   { date :: T.Text,

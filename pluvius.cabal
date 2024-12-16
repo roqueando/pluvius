@@ -23,20 +23,17 @@ common extensions
 library
     import:           warnings, extensions
     exposed-modules:  FeatureExtractor.Types
-                    , FeatureExtractor.ExtractCSV
                     , FeatureExtractor.Transformer
+                    , FeatureExtractor.Worker
+                    , FeatureExtractor.Query
 
     build-depends:    base ^>=4.17.2.1
                     , conduit
-                    , bytestring
-                    , vector
+                    , rio
                     , cassava
-                    , text
                     , parallel
-                    , Frames
-                    , pipes
-                    , foldl
-                    , microlens
+                    , mongoDB
+                    , bson
 
     -- Directories containing source files.
     hs-source-dirs:   src
@@ -49,10 +46,6 @@ executable feature-extractor
     main-is:          Main.hs
     build-depends:    base ^>=4.17.2.1
                     , pluvius
-                    , Frames
-                    , pipes
-                    , foldl
-                    , microlens
 
     hs-source-dirs:   app
     default-language: Haskell2010

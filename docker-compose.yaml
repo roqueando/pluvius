@@ -2,11 +2,17 @@ version: '3'
 
 services:
   feature_store:
-    image: postgres:latest
-    environment:
-      POSTGRES_USER: pluvius
-      POSTGRES_PASSWORD: local_password
-      POSTGRES_DB: raw
+    image: mongo:latest
+    container_name: pluvius_feature_store
     ports:
-      - '5432:5432'
+      - '27017:27017'
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: pluvius
+      MONGO_INITDB_ROOT_PASSWORD: local_password
+    volumes:
+      - feature_store:/data/db
 
+
+volumes:
+  feature_store:
+    driver: local
