@@ -1,0 +1,4 @@
+%{
+  "bson": {:hex, :bson, "0.4.4", "175ad645cc492349a4cefa0bdff612178a0db611adf38dabe2bbfad2aa25627a", [:mix], [], "hexpm", "69cbda1d27fd0f500f306c99e609593132c66b521b92a21ce6f21fea88dc3d27"},
+  "mongo": {:hex, :mongo, "0.5.4", "60633337f65b13e8f267f090c8b320d5e6b833faef18b1812cdd8d809e6fdb3a", [:mix], [{:bson, "~> 0.4.4", [hex: :bson, repo: "hexpm", optional: false]}], "hexpm", "fb6e0ed11bd2f193e12d0f905eb1968525b52dc99441ecbbf90c7745df246ed8"},
+}
