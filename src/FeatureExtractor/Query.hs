@@ -28,8 +28,8 @@ enrichData = aggregate "raw" pipeline
       , ["$project" =: [ "date" =: (1 :: Int)
                        , "hour" =: (1 :: Int)
                        , "rain" =: (1 :: Int)
-                       , "pmax" =: ["$divide" =: ["$pmax" :: String, 10]]
-                       , "pmin" =: ["$divide" =: [("$pmin" :: String), "10"]]
+                       , "pmax" =: ["$divide" =: [String "$pmax", Float 10.0]]
+                       , "pmin" =: ["$divide" =: [String "$pmin", Float 10.0]]
                        , "tmax" =: (1 :: Int)
                        , "tmin" =: (1 :: Int)
                        , "dpmax" =: (1 :: Int)
@@ -49,14 +49,10 @@ enrichData = aggregate "raw" pipeline
                        , "hmax_avg" =: ["$avg" =: ("$hmax" :: String)]
                        , "hmin_avg" =: ["$avg" =: ("$hmin" :: String)]
                        ]]
-      , ["$out" =: ["db" =: ("feature_store" :: String)
-                   , "coll" =: ("enriched" :: String)
-                   ]
+        , ["$out" =: ["db" =: ("feature_store" :: String)
+                     , "coll" =: ("enriched" :: String)
+                     ]]
         ]
-      ]
-
-getRawData :: Action IO [Document]
-getRawData = find (select ["date" =: ("2019/01/01" :: String)] "raw") >>= rest
 
 run :: IO [Document]
 run = do
