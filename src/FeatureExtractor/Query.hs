@@ -2,19 +2,9 @@ module FeatureExtractor.Query where
 
 import Database.MongoDB
 
--- import Control.Monad.Trans (liftIO)
-
-data QueryError
-  = NotFound
-  | MemoryError
-
-type Result = [Document]
-
-
 connectAuthenticated :: String -> Database -> Username -> Password -> IO Pipe
 connectAuthenticated host' dbName username password = do
   pipe <- connect (host host')
-  -- \$> :t pipe
   e <- access pipe master dbName (auth username password)
   if e
     then return pipe
@@ -24,7 +14,8 @@ enrichData :: Action IO [Document]
 enrichData = aggregate "raw" pipeline
   where
     pipeline =
-      [ ["$match" =: ["date" =: ("2019/01/01" :: String)]] -- TODO: change to today
+      -- FIXME: change to today
+      [ ["$match" =: ["date" =: ("2019/01/01" :: String)]]
       , ["$project" =: [ "date" =: (1 :: Int)
                        , "hour" =: (1 :: Int)
                        , "rain" =: (1 :: Int)
@@ -56,5 +47,6 @@ enrichData = aggregate "raw" pipeline
 
 run :: IO [Document]
 run = do
+  -- FIXME: get this from env vars
   pipe <- connectAuthenticated "127.0.0.1" "admin" "pluvius" "local_password"
   access pipe master "feature_store" enrichData

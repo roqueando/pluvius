@@ -1,9 +1,10 @@
 module Main where
 
--- import FeatureExtractor.ExtractCSV (run)
 import FeatureExtractor.Query (run)
 
 main :: IO ()
 main = do
   result <- run
-  print result
+  if length result > 0
+     then print ("Something goes wrong" :: String)
+     else print ("Features calculated successfully" :: String)
