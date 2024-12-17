@@ -1,6 +1,5 @@
 module FeatureExtractor.Transformer where
 
-import RIO
 --import FeatureExtractor.Types (Weather (..))
 
 type OneHotDate = Maybe (Int, Int, Int)

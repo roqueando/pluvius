@@ -8,7 +8,6 @@ import Data.Csv
     (.:),
   )
 import qualified RIO.Text as T
-import RIO
 
 data Weather = Weather
   { date :: T.Text,
