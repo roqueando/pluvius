@@ -10,9 +10,6 @@ data QueryError
 
 type Result = [Document]
 
-executeQuery :: Action IO [Document]
-executeQuery = getRawData
-
 
 connectAuthenticated :: String -> Database -> Username -> Password -> IO Pipe
 connectAuthenticated host' dbName username password = do
@@ -31,8 +28,8 @@ enrichData = aggregate "raw" pipeline
       , ["$project" =: [ "date" =: (1 :: Int)
                        , "hour" =: (1 :: Int)
                        , "rain" =: (1 :: Int)
-                       , "pmax" =: (1 :: Int)
-                       , "pmin" =: (1 :: Int)
+                       , "pmax" =: ["$divide" =: ["$pmax" :: String, 10]]
+                       , "pmin" =: ["$divide" =: [("$pmin" :: String), "10"]]
                        , "tmax" =: (1 :: Int)
                        , "tmin" =: (1 :: Int)
                        , "dpmax" =: (1 :: Int)
@@ -43,8 +40,19 @@ enrichData = aggregate "raw" pipeline
                        , "tdiff" =: ["$subtract" =: [("$tmax" :: String), ("$tmin" :: String)]]
                        , "dpdiff" =: ["$subtract" =: [("$dpmax" :: String), ("$dpmin" :: String)]]
                        , "hdiff" =: ["$subtract" =: [("$hmax" :: String), ("$hmin" :: String)]]
+                       , "pmax_avg" =: ["$avg" =: ("$pmax" :: String)]
+                       , "pmin_avg" =: ["$avg" =: ("$pmin" :: String)]
+                       , "tmax_avg" =: ["$avg" =: ("$tmax" :: String)]
+                       , "tmin_avg" =: ["$avg" =: ("$tmin" :: String)]
+                       , "dpmax_avg" =: ["$avg" =: ("$dpmax" :: String)]
+                       , "dpmin_avg" =: ["$avg" =: ("$dpmin" :: String)]
+                       , "hmax_avg" =: ["$avg" =: ("$hmax" :: String)]
+                       , "hmin_avg" =: ["$avg" =: ("$hmin" :: String)]
                        ]]
-
+      , ["$out" =: ["db" =: ("feature_store" :: String)
+                   , "coll" =: ("enriched" :: String)
+                   ]
+        ]
       ]
 
 getRawData :: Action IO [Document]
@@ -53,4 +61,4 @@ getRawData = find (select ["date" =: ("2019/01/01" :: String)] "raw") >>= rest
 run :: IO [Document]
 run = do
   pipe <- connectAuthenticated "127.0.0.1" "admin" "pluvius" "local_password"
-  access pipe master "feature_store" executeQuery
+  access pipe master "feature_store" enrichData

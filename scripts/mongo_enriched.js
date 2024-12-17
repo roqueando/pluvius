@@ -1,11 +1,9 @@
 db.raw.aggregate([
-  /*
   {
     $match: {
       date: '2019/01/01' // example that how can I aggregate by some condition
     },
   },
-  */
   {
     $project: {
       date: 1,
@@ -36,7 +34,7 @@ db.raw.aggregate([
   {
     $out: {
       db: "feature_store",
-      coll: "enriched"
+      coll: "enriched_tst"
     }
   }
 ])
