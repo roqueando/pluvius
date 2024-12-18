@@ -2,38 +2,29 @@
 
 Aqui eu vou tentar criar alguns itens TODO e descrever o que eu estou fazendo por features/hotfixes/releases.
 
-## migrate/rust VIDA LONGA AO CARANGUEIJO
+## feat/featurizer
 
-* [08.12.2024] migrando para rust (rewrite all these fucking stuff in rust)
-    - {EPIC} criar o feature-extractor para o preprocessamento do dataset
-        - [ ] Tentar usar o Polars para processar  o CSV
-        - [ ] Primeira tentativa, printar as linhas ao ir processando os dados
-
-    - {EPIC} criar o feature-store para o preprocessamento e armazenamento das features em um banco vetorial
-
-
-#### Descrição dos dados, marcaçãoo de quem vai ser usado
->#### Os dados que não for usado não vai ser marcado
->#### Marcados com ~ serão transformados em um novo dado numérico
->#### Marcados com x serão apenas limpos
-
-- [~] Data { será transformado em unix time para ser usado como medida temporária numérica }
-- [~] Hora UTC { será transformado em unix time para ser usado como medida temporária numérica }
-- [x] PRECIPITAÇÃO TOTAL, HORÁRIO (mm)
-- [x] PRESSÃO ATMOSFERICA MAX.NA HORA ANT. (AUT) (mB)
-- [x] PRESSÃO ATMOSFERICA MIN. NA HORA ANT. (AUT) (mB)
-- [x] TEMPERATURA MÁXIMA NA HORA ANT. (AUT) (°C),
-- [x] TEMPERATURA MÍNIMA NA HORA ANT. (AUT) (°C),
-- [x] TEMPERATURA ORVALHO MAX. NA HORA ANT. (AUT) (°C),
-- [x] TEMPERATURA ORVALHO MIN. NA HORA ANT. (AUT) (°C),
-- [~] UMIDADE REL. MAX. NA HORA ANT. (AUT) (%),
-- [~] UMIDADE REL. MIN. NA HORA ANT. (AUT) (%),
+* [06.12.2024] Começando o featurizer, um worker haskell
+    - {EPIC} criar o pipeline worker em haskell para o preprocessamento do dataset
+        - [x] Tentar usar o Conduit para processar em streaming o CSV
+            - Levando em consideração que o tamanho mínimo desse dataset gira em torno de ~500MB
+        - [x] Primeira tentativa, printar as linhas ao ir processando os dados
 
 
-### Limpeza dos dados
+### Descrição dos dados, marcação de quem vai ser usado
 
-Como a Data e Hora são datas temporais, elas precisam ser transformadas em números. Uma ideia que tenho é transforma-las
-em números UNIX Timestamp para que se tornem números escalares
+- date :: DATA
+- hour :: HORA
+- rain :: PRECIPITACAO em milímetros (mm)
+- pmax :: PRESSÃO ATMOSFERICA MAX.NA HORA ANT. (AUT) (mB)
+- pmin :: PRESSÃO ATMOSFERICA MIN. NA HORA ANT. (AUT) (mB)
+- tmax :: TEMPERATURA MÁXIMA NA HORA ANT. (AUT) (°C)
+- tmin :: TEMPERATURA MÍNIMA NA HORA ANT. (AUT) (°C)
+- dpmax :: TEMPERATURA ORVALHO MAX. NA HORA ANT. (AUT) (°C)
+- dpmin :: TEMPERATURA ORVALHO MIN. NA HORA ANT. (AUT) (°C)
+- hmax :: UMIDADE REL. MAX. NA HORA ANT. (AUT) (%)
+- hmin :: UMIDADE REL. MIN. NA HORA ANT. (AUT) (%)
+
 
 ## Alteração do escopo, o projeto será um projeto haskell com utilitários python
 - [x] tentar passar os arquivos do cabal para o projeto raiz
@@ -46,15 +37,25 @@ em números UNIX Timestamp para que se tornem números escalares
 
 * Descobri que ao usar as opções do GHC como `-threaded` e otimização, já consegue dar um ótimo resultado porém ainda não estou usando Haskell de forma paralela e nem concorrente.
 
-## Feature Engineering (em python)
->## Calculando features a partir de features existentes
+## Feature Engineering
+>### Calculando features a partir de features existentes
 
-One Hot Encoding fazer por final
-- [x] Transformar date em dia mes ano, a data vem nesse formato: `2019/01/01` (ano/mes/dia), só precisamos alterar para que ao invés de slashes, use traços
-- [x] Transformar hour em hora e minuto
+NOTA: Percebi que a ideia que estou implementando não é uma pesquisa num jupyter notebook da vida, e sim de fato o projeto real ja sendo "produtizado", porém como não tenho o modelo pronto, irei puxar via batches e usar uma flag para controlar o fluxo do pipeline.
 
-- [ ] Agrupar por dia do mês e calcular o mínimo e máximo dos atributos -> `{feature}_min_dom`, `{feature}_max_dom` (dom == day of month)
-- [ ] Agrupar por dia do mês e calcular a diferença entre o minimo e o máximo do dia -> `{feature}_diff_dom`
-- [ ] Agrupar por dia do mês e calcular a média de mínimo e máximo dos atributos -> `{feature}_avg_min_dom`, `{feature}_avg_max_dom`
+1. [x] Adicionar no docker-compose o mongo db como banco de feature store
+2. [x] Criar a query para puxar os dados para criar o enriched via Haskell
+    - Para fazer isso posso criar funções diferentes para fazer queries e aggregates, tendo como base [esse script](scripts/mongo_enrich.js)
+    - [x] Calcular a diferença entre `{feature}_max` e `{feature}_min` gerando `{feature}diff`
+    - [x] Calcular a média de cada feature ao todo
 
-    df = pd.read_sql_table("2019_enriched", 'postgresql://pluvius:local_password@localhost:5432/raw')
+## Processamento das features calculadas
+>### Processar a data e hora para serem dados numéricos e aplicar a normalização dos dados
+
+Aqui temos duas etapas separadas, fazer com que todo nosso dado calculado seja dados numéricos (pois só calculamos as features numéricas), e fazer com que nossos dados sejam devidamente normalizados. Com isso teremos a introdução de uma distribuição normal e desvios padrões e como eles podem ajudar a saber se a normalização ocorreu de uma boa forma ou não.
+
+1. [ ] Transformar date em dia mes ano, a data vem nesse formato: `2019/01/01` (ano/mes/dia), só precisamos alterar para que ao invés de slashes, use traços.
+2. [ ] Aplicar normalização e salvar com a condição que o desvio padrão seja entre 0 e 1.
+
+
+[  ] {???} Ajustar o utils de download dataset do python para armazenar o dataset num mongodb
+

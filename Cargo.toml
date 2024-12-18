@@ -2,3 +2,6 @@
 members = ["feature-extractor"]
 
 resolver = "2"
+
+[workspace.dependencies]
+tokio = "1"
