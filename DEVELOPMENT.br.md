@@ -11,7 +11,7 @@ Aqui eu vou tentar criar alguns itens TODO e descrever o que eu estou fazendo po
         - [x] Primeira tentativa, printar as linhas ao ir processando os dados
 
 
-#### Descrição dos dados, marcação de quem vai ser usado
+### Descrição dos dados, marcação de quem vai ser usado
 
 - date :: DATA
 - hour :: HORA
@@ -25,11 +25,6 @@ Aqui eu vou tentar criar alguns itens TODO e descrever o que eu estou fazendo po
 - hmax :: UMIDADE REL. MAX. NA HORA ANT. (AUT) (%)
 - hmin :: UMIDADE REL. MIN. NA HORA ANT. (AUT) (%)
 
-
-### Limpeza dos dados
-
-Como a Data e Hora são datas temporais, elas precisam ser transformadas em números. Uma ideia que tenho é transforma-las
-em números UNIX Timestamp para que se tornem números escalares
 
 ## Alteração do escopo, o projeto será um projeto haskell com utilitários python
 - [x] tentar passar os arquivos do cabal para o projeto raiz
