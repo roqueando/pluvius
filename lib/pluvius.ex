@@ -9,14 +9,13 @@ defmodule Pluvius do
   ## Examples
 
       iex> Pluvius.hello()
-       =>world
+       :world
 
   """
-  # TODO => the connection must be easy to catch using processes (GenServers or Agents)
-  def enrich_data do
+  def enrich_data(date) do
     {:ok, top} =
       Mongo.start_link(
-        url: "mongodb =>//localhost =>27017/feature_store",
+        url: "mongodb://localhost:27017/feature_store",
         username: "pluvius",
         password: "local_password",
         database: "feature_store",
@@ -27,7 +26,7 @@ defmodule Pluvius do
     |> Mongo.aggregate("raw", [
       %{
         "$match" => %{
-          "date" => "2019/01/01"
+          "date" => date
         }
       },
       %{
@@ -35,8 +34,8 @@ defmodule Pluvius do
           "date" => 1,
           "hour" => 1,
           "rain" => 1,
-          "pmax" => 1,
-          "pmin" => 1,
+          "pmax" => %{"$divide" => ["$pmax", 10]},
+          "pmin" => %{"$divide" => ["$pmin", 10]},
           "tmax" => 1,
           "tmin" => 1,
           "dpmax" => 1,
