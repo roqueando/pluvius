@@ -27,6 +27,9 @@ library
                     , FeatureExtractor.Transformer
                     , FeatureExtractor.Worker
                     , FeatureExtractor.Query
+                    , Core.DataPipeline
+                    , Core.PipelineUseCase
+                    , External.Mongo
 
     build-depends:    base ^>=4.17.2.1
                     , conduit
