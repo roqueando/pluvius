@@ -4,4 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-polars = "0.44.2"
+bson = "2.13.0"
+mongodb = "3.1.1"
+serde = "1.0.216"
+tokio = { workspace = true }

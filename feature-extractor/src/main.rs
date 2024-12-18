@@ -1,13 +1,8 @@
-use polars::prelude::*;
+use mongodb::{Client, options::{ClientOptions, ResolverConfig}};
 
 fn main() {
-    let df = CsvReadOptions::default()
-        .with_infer_schema_length(Some(100))
-        .with_has_header(true)
-        .try_into_reader_with_file_path(Some("./data/raw/2019.csv".into()))
-        .unwrap()
-        .finish()
-        .unwrap();
+    let client_uri = "mongodb+srv://pluvius:local_password@localhost:27017/feature_store";
+    let options = ClientOptions::parse_with_resolver_config(&client_uri, ResolverConfig)
 
-    println!("{:?}", df);
+    println!("opa meu consagrated");
 }
