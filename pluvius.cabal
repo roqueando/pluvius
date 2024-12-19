@@ -30,6 +30,7 @@ library
                     , Core.DataPipeline
                     , Core.PipelineUseCase
                     , External.Mongo
+                    , Config
 
     build-depends:    base ^>=4.17.2.1
                     , conduit
