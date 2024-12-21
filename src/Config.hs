@@ -2,8 +2,6 @@
 
 module Config where
 
-import Core.DataPipeline
+import Core.DataPipeline ( DataPipeline )
 
-data ConfigT where
-  ConfigT :: DataPipeline a => { database :: a } -> ConfigT
-
+data ConfigT = forall a. (DataPipeline a) => ConfigT {database :: a}
