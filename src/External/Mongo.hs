@@ -11,7 +11,7 @@ data MongoT = Mongo
     password :: Password
   }
 
-connectAuthenticated :: MongoT -> Either QueryError Pipe
+connectAuthenticated :: MongoT -> IO (Either QueryError Pipe)
 connectAuthenticated (Mongo h db username' password') = result
   where
     getPipe :: Pipe -> Pipe
