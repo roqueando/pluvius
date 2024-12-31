@@ -11,17 +11,13 @@ data MongoT = Mongo
     password :: Password
   }
 
-connectAuthenticated :: MongoT -> IO (Either QueryError Pipe)
-connectAuthenticated (Mongo h db username' password') = result
-  where
-    getPipe :: Pipe -> Pipe
-    getPipe = connect (host h) >>= id
-
--- pipe <- connect (host h)
--- e <- access pipe master db (auth username' password')
--- if e
---   then return pipe
---   else error "Failed to authenticate"
+connectAuthenticated :: MongoT -> IO (Either PipelineError Pipe)
+connectAuthenticated (Mongo h db username' password') = do
+  pipe <- connect (host h)
+  e <- access pipe master db (auth username' password')
+  if e
+    then return $ Right pipe
+    else error "Failed to authenticate"
 
 runAggregate :: T.Text -> Action IO [Document]
 runAggregate date = aggregate "raw" (pipeline date)
@@ -36,10 +32,10 @@ runAggregate date = aggregate "raw" (pipeline date)
                  "pmin" =: ["$divide" =: [String "$pmin", Float 10.0]],
                  "tmax" =: Int64 1,
                  "tmin" =: Int64 1,
-                 "dpmax" =: Int64,
-                 "dpmin" =: Int64,
-                 "hmax" =: Int64,
-                 "hmin" =: Int64,
+                 "dpmax" =: Int64 1,
+                 "dpmin" =: Int64 1,
+                 "hmax" =: Int64 1,
+                 "hmin" =: Int64 1,
                  "pdiff" =: ["$subtract" =: [String "$pmax", String "$pmin"]],
                  "tdiff" =: ["$subtract" =: [String "$tmax", String "$tmin"]],
                  "dpdiff" =: ["$subtract" =: [String "$dpmax", String "$dpmin"]],
@@ -64,14 +60,12 @@ runAggregate date = aggregate "raw" (pipeline date)
 instance DataPipeline MongoT where
   enrichData mongo date = do
     pipe <- connectAuthenticated mongo
-    result <- access pipe master "feature_store" (runAggregate date)
-    case result of
-      [] -> Right Success
-      _ -> Left QueryError
-
--- instance DataPipeline (Action IO) where
---  enrichData = aggregate "raw" pipeline
---    where
---      pipeline = [ ["$project" =: ["$date" =: (1 :: Int)]]
---                 , ["$out" =: ["db" =: String "feature_store", "coll" =: String "enriched_tst"]]
---                 ]
+    case pipe of
+      Left qe -> return $ Left qe
+      Right p -> do
+        result <- access p master "feature_store" (runAggregate (T.pack date))
+        handleResult result
+    where
+      handleResult :: [Document] -> IO (Either PipelineError Result)
+      handleResult [] = return $ Right Success
+      handleResult _ = return $ Left CommonError

@@ -1,13 +1,13 @@
 module Core.DataPipeline where
 
-type Date = String
-
-data QueryError
-  = QueryError
+data PipelineError
+  = PipelineError
   | AuthenticationError
   | TimeoutError
+  | CommonError
 
-data Success = Success
+data Result =
+  Success
 
 class DataPipeline a where
-  enrichData :: a -> Date -> Either QueryError b
+  enrichData :: a -> String -> IO (Either PipelineError Result)

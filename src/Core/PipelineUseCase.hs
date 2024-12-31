@@ -1,6 +1,6 @@
 module Core.PipelineUseCase where
 
-import Core.DataPipeline (QueryError (..), Success (..), DataPipeline, enrichData)
+import Core.DataPipeline (PipelineError (..), Result (..), DataPipeline, enrichData)
 
-runPipeline :: (DataPipeline a) => a -> String -> IO (Either QueryError Success)
+runPipeline :: (DataPipeline a) => a -> String -> IO (Either PipelineError Result)
 runPipeline = enrichData
