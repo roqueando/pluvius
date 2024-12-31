@@ -1,6 +1,6 @@
-module External.Mongo where
+module External.Pipeline.Mongo where
 
-import Core.DataPipeline
+import qualified Core.Adapter.Pipeline as P
 import Database.MongoDB
 import qualified RIO.Text as T
 
@@ -11,7 +11,20 @@ data MongoT = Mongo
     password :: Password
   }
 
-connectAuthenticated :: MongoT -> IO (Either PipelineError Pipe)
+instance P.Pipeline MongoT where
+  enrichData mongo date = do
+    pipe <- connectAuthenticated mongo
+    case pipe of
+      Left qe -> return $ Left qe
+      Right p -> do
+        result <- access p master "feature_store" (runAggregate (T.pack date))
+        handleResult result
+    where
+      handleResult :: [Document] -> IO (Either P.PipelineError P.Result)
+      handleResult [] = return $ Right P.Success
+      handleResult _ = return $ Left P.CommonError
+
+connectAuthenticated :: MongoT -> IO (Either P.PipelineError Pipe)
 connectAuthenticated (Mongo h db username' password') = do
   pipe <- connect (host h)
   e <- access pipe master db (auth username' password')
@@ -56,16 +69,3 @@ runAggregate date = aggregate "raw" (pipeline date)
                ]
         ]
       ]
-
-instance DataPipeline MongoT where
-  enrichData mongo date = do
-    pipe <- connectAuthenticated mongo
-    case pipe of
-      Left qe -> return $ Left qe
-      Right p -> do
-        result <- access p master "feature_store" (runAggregate (T.pack date))
-        handleResult result
-    where
-      handleResult :: [Document] -> IO (Either PipelineError Result)
-      handleResult [] = return $ Right Success
-      handleResult _ = return $ Left CommonError

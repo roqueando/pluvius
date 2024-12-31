@@ -23,19 +23,13 @@ common extensions
 
 library
     import:           warnings, extensions
-    exposed-modules:  FeatureExtractor.Types
-                    , FeatureExtractor.Transformer
-                    , FeatureExtractor.Worker
-                    , FeatureExtractor.Query
-                    , Core.DataPipeline
-                    , Core.PipelineUseCase
-                    , External.Mongo
-                    , Config
+    exposed-modules:  Core.Entity.Settings
+                    , Core.Adapter.Pipeline
+                    , Core.UseCase.PipelineUseCase
+                    , External.Pipeline.Mongo
 
     build-depends:    base ^>=4.17.2.1
-                    , conduit
                     , rio
-                    , cassava
                     , parallel
                     , mongoDB
                     , bson
@@ -52,7 +46,7 @@ executable feature-extractor
     build-depends:    base ^>=4.17.2.1
                     , pluvius
 
-    hs-source-dirs:   app
+    hs-source-dirs:   app/FeatureExtractor
     default-language: Haskell2010
     ghc-options:    -O2 -threaded -rtsopts -with-rtsopts=-N
 

@@ -11,7 +11,8 @@ the project still in development and the next updates will be coded in the follo
 - [x] model training and ONNX saving
 - [x] create Dockerfile for featurizer
 - [x] create utils for downloading the INMET dataset
-- [ ] create a worker pipeline with haskell for preprocessing
+- [x] create a worker pipeline with haskell for preprocessing (enrichment stage)
+- [ ] create a worker pipeline with haskell for preprocessing (normalizing and vectorizing stage)
 - [ ] create an evaluation API for prediction
 
 ## 💻 pre-requisites
@@ -31,9 +32,9 @@ For install `pluvius` first you need:
 $ git clone https://github.com/roqueando/pluvius.git
 ```
 
-- build featurizer
+- build feature-extractor
 ```sh
-$ make build/featurizer
+$ make build/feature-extractor
 ```
 
 - create a virtualenv for python stuff

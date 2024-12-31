@@ -1,4 +1,4 @@
-module Core.DataPipeline where
+module Core.Adapter.Pipeline where
 
 data PipelineError
   = PipelineError
@@ -9,5 +9,5 @@ data PipelineError
 data Result =
   Success
 
-class DataPipeline a where
+class Pipeline a where
   enrichData :: a -> String -> IO (Either PipelineError Result)
