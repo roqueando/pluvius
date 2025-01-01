@@ -48,3 +48,4 @@ data/**/*
 dist-newstyle
 env
 .vscode
+.env

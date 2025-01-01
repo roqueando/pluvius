@@ -1,6 +1,19 @@
 version: '3'
 
 services:
+  feature_extractor_worker:
+    image: pluvius/feature-extractor:0.0.1
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    environment:
+      DB_HOST: feature_store
+      DB_NAME: admin
+      DB_USER: pluvius
+      DB_PASSWORD: local_password
+    networks:
+      - pluvius
+      
   feature_store:
     image: mongo:latest
     container_name: pluvius_feature_store
@@ -11,8 +24,13 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: local_password
     volumes:
       - feature_store:/data/db
+    networks:
+      - pluvius
 
 
 volumes:
   feature_store:
     driver: local
+networks:
+  pluvius:
+    driver: bridge

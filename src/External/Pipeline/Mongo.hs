@@ -3,6 +3,7 @@ module External.Pipeline.Mongo where
 import qualified Core.Adapter.Pipeline as P
 import Database.MongoDB
 import qualified RIO.Text as T
+import System.Environment
 
 data MongoT = Mongo
   { host' :: String,
@@ -23,6 +24,20 @@ instance P.Pipeline MongoT where
       handleResult :: [Document] -> IO (Either P.PipelineError P.Result)
       handleResult [] = return $ Right P.Success
       handleResult _ = return $ Left P.CommonError
+
+getMongoCredentials :: IO MongoT
+getMongoCredentials = do
+  host'' <- getEnv "DB_HOST"
+  dbName' <- getEnv "DB_NAME"
+  dbUser <- getEnv "DB_USER"
+  dbPassword <- getEnv "DB_PASSWORD"
+  return Mongo
+    { host' = host'',
+      dbName = T.pack dbName',
+      username = T.pack dbUser,
+      password = T.pack dbPassword
+    }
+
 
 connectAuthenticated :: MongoT -> IO (Either P.PipelineError Pipe)
 connectAuthenticated (Mongo h db username' password') = do

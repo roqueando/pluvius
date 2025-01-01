@@ -48,6 +48,13 @@ NOTA: Percebi que a ideia que estou implementando não é uma pesquisa num jupyt
     - [x] Calcular a diferença entre `{feature}_max` e `{feature}_min` gerando `{feature}diff`
     - [x] Calcular a média de cada feature ao todo
 
+## Fazendo o worker dockerizado rodar
+>#### Houve alguns problemas quando refatorei esse código e por isso o docker falhou, agora preciso altera-lo para funcionar em um conteiner.
+
+1. [x] Arrumar o Dockerfile para atender as necessidades atuais do worker e sua arquitetura.
+2. [x] Usar váriaveis de ambiente para puxar os dados necessários para o banco
+3. [ ] Adicionar no docker-compose a aplicação junto ao banco no mesmo network
+
 ## Processamento das features calculadas
 >### Processar a data e hora para serem dados numéricos e aplicar a normalização dos dados
 
