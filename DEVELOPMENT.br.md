@@ -53,7 +53,7 @@ NOTA: Percebi que a ideia que estou implementando não é uma pesquisa num jupyt
 
 1. [x] Arrumar o Dockerfile para atender as necessidades atuais do worker e sua arquitetura.
 2. [x] Usar váriaveis de ambiente para puxar os dados necessários para o banco
-3. [ ] Adicionar no docker-compose a aplicação junto ao banco no mesmo network
+3. [x] Adicionar no docker-compose a aplicação junto ao banco no mesmo network
 
 ## Processamento das features calculadas
 >### Processar a data e hora para serem dados numéricos e aplicar a normalização dos dados

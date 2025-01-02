@@ -50,6 +50,8 @@ $ make download/dataset
 ```
 This will download, extract the zip file and merge into a single CSV for post-use.
 
+Make sure to import this CSV into a mongo database. I put the collection named as `raw`.
+
 ### Running preprocessing
 Here we will need to pre process all dataset to fit into model, so we will run the preprocess dockerized app
 

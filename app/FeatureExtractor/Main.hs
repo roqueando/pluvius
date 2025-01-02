@@ -1,7 +1,7 @@
 module Main where
 
 import Core.Entity.Settings ( SettingsT(..) )
-import Core.Adapter.Pipeline
+import Core.Adapter.Pipeline ( PipelineError, Result )
 import Core.UseCase.PipelineUseCase ( runPipeline )
 import External.Pipeline.Mongo ( getMongoCredentials )
 

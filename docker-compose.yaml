@@ -22,6 +22,7 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: pluvius
       MONGO_INITDB_ROOT_PASSWORD: local_password
+      MONGO_INITDB_DATABASE: feature_store
     volumes:
       - feature_store:/data/db
     networks:
