@@ -61,6 +61,9 @@ NOTA: Percebi que a ideia que estou implementando não é uma pesquisa num jupyt
 Aqui temos duas etapas separadas, fazer com que todo nosso dado calculado seja dados numéricos (pois só calculamos as features numéricas), e fazer com que nossos dados sejam devidamente normalizados. Com isso teremos a introdução de uma distribuição normal e desvios padrões e como eles podem ajudar a saber se a normalização ocorreu de uma boa forma ou não.
 
 1. [ ] Transformar date em dia mes ano, a data vem nesse formato: `2019/01/01` (ano/mes/dia), só precisamos alterar para que ao invés de slashes, use traços.
+    - Tem duas formas de fazer isso:
+       1. Pelo mongoDB ou o datasource de escolha (o banco de dados), assim usando as ferramentas JS ou SQL dependendo do banco escolhido.
+       2. Talvez a melhor forma, puxar os dados por batch (uma condição como a data mesmo, ja que vai ser rodado no mesmo dia) e aplicar uma transformação no conjunto que puxou. Assim mantém a lógica do domínio.
 2. [ ] Aplicar normalização e salvar com a condição que o desvio padrão seja entre 0 e 1.
 
 

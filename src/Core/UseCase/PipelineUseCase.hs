@@ -1,6 +1,14 @@
 module Core.UseCase.PipelineUseCase where
 
-import Core.Adapter.Pipeline (PipelineError (..), Result (..), Pipeline, enrichData)
+import Core.Entity.Weather (EnrichedWeatherT (..))
+import Core.Gateway.PipelineGateway
+  ( PipelineError (..),
+    PipelineGateway (..),
+    calculateFeatures
+  )
 
-runPipeline :: (Pipeline a) => a -> String -> IO (Either PipelineError Result)
-runPipeline = enrichData
+runPipeline :: (PipelineGateway a) => a -> String -> IO (Either PipelineError ())
+runPipeline = calculateFeatures
+
+runTransformation :: (PipelineGateway a) => a -> String -> IO (Either PipelineError [EnrichedWeatherT])
+runTransformation = transformData

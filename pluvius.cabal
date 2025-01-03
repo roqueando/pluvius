@@ -23,8 +23,8 @@ common extensions
 
 library
     import:           warnings, extensions
-    exposed-modules:  Core.Entity.Settings
-                    , Core.Adapter.Pipeline
+    exposed-modules:  Core.Entity.Weather
+                    , Core.Gateway.PipelineGateway
                     , Core.UseCase.PipelineUseCase
                     , External.Pipeline.Mongo
 

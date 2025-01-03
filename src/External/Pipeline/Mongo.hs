@@ -1,9 +1,14 @@
+{-# LANGUAGE InstanceSigs #-}
 module External.Pipeline.Mongo where
 
-import qualified Core.Adapter.Pipeline as P
 import Database.MongoDB
+import System.Environment ( getEnv )
+
+import Core.Gateway.PipelineGateway (PipelineGateway (calculateFeatures))
+import Core.Entity.Weather (EnrichedWeatherT (..), WeatherT (..))
+import qualified Core.Gateway.PipelineGateway as P
+
 import qualified RIO.Text as T
-import System.Environment
 
 data MongoT = Mongo
   { host' :: String,
@@ -12,18 +17,34 @@ data MongoT = Mongo
     password :: Password
   }
 
-instance P.Pipeline MongoT where
-  enrichData mongo date = do
+instance P.PipelineGateway MongoT where
+  calculateFeatures :: MongoT -> String -> IO (Either P.PipelineError ())
+  calculateFeatures mongo date = do
     pipe <- connectAuthenticated mongo
     case pipe of
       Left qe -> return $ Left qe
       Right p -> do
         result <- access p master "feature_store" (runAggregate (T.pack date))
         handleResult result
+
+  fetchData :: MongoT -> String -> IO (Either P.PipelineError [WeatherT])
+  fetchData _ _ = undefined
+
+  transformData :: MongoT -> String -> IO (Either P.PipelineError [EnrichedWeatherT])
+  transformData mongo date = do
+    pipe <- connectAuthenticated mongo
+    case pipe of
+      Left qe -> return $ Left qe
+      Right p -> do
+        result <- access p master "feature_store" (runTransform (T.pack date))
+        handleMyResult result
     where
-      handleResult :: [Document] -> IO (Either P.PipelineError P.Result)
-      handleResult [] = return $ Right P.Success
-      handleResult _ = return $ Left P.CommonError
+      handleMyResult [] = return $ Left P.CommonError
+      handleMyResult _ = return $ Right []
+
+handleResult :: [Document] -> IO (Either P.PipelineError ())
+handleResult [] = return $ Right ()
+handleResult _ = return $ Left P.CommonError
 
 getMongoCredentials :: IO MongoT
 getMongoCredentials = do
@@ -46,6 +67,9 @@ connectAuthenticated (Mongo h db username' password') = do
   if e
     then return $ Right pipe
     else error "Failed to authenticate"
+
+runTransform :: T.Text -> Action IO [Document]
+runTransform _ = undefined
 
 runAggregate :: T.Text -> Action IO [Document]
 runAggregate date = aggregate "raw" (pipeline date)

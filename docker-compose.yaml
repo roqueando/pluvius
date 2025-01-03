@@ -13,6 +13,9 @@ services:
       DB_PASSWORD: local_password
     networks:
       - pluvius
+    depends_on:
+      feature_store:
+        condition: service_started
       
   feature_store:
     image: mongo:latest
@@ -27,7 +30,6 @@ services:
       - feature_store:/data/db
     networks:
       - pluvius
-
 
 volumes:
   feature_store:
