@@ -4,8 +4,10 @@ module External.Pipeline.Mongo where
 import Database.MongoDB
 import System.Environment ( getEnv )
 
-import Core.Gateway.PipelineGateway (PipelineGateway (calculateFeatures))
-import Core.Entity.Weather (EnrichedWeatherT (..), WeatherT (..))
+import Core.Gateway.PipelineGateway (PipelineGateway (calculateFeatures, fetchData, insertTransformedData))
+import Core.Mapper.DocumentToWeather
+
+import Core.Entity.Weather (WeatherT (..))
 import qualified Core.Gateway.PipelineGateway as P
 
 import qualified RIO.Text as T
@@ -28,23 +30,28 @@ instance P.PipelineGateway MongoT where
         handleResult result
 
   fetchData :: MongoT -> String -> IO (Either P.PipelineError [WeatherT])
-  fetchData _ _ = undefined
-
-  transformData :: MongoT -> String -> IO (Either P.PipelineError [EnrichedWeatherT])
-  transformData mongo date = do
+  fetchData mongo date = do
     pipe <- connectAuthenticated mongo
     case pipe of
       Left qe -> return $ Left qe
       Right p -> do
-        result <- access p master "feature_store" (runTransform (T.pack date))
-        handleMyResult result
+        result <- access p master "feature_store" (runFetchData (T.pack date))
+        handleFetchData result
     where
-      handleMyResult [] = return $ Left P.CommonError
-      handleMyResult _ = return $ Right []
+      handleFetchData :: [Document] -> IO (Either P.PipelineError [WeatherT])
+      handleFetchData [] = return $ Left P.QueryResultError
+      handleFetchData xs = return $ runTransform xs
+
+  insertTransformedData :: MongoT -> String -> IO (Either P.PipelineError ())
+  insertTransformedData _ _ = undefined
 
 handleResult :: [Document] -> IO (Either P.PipelineError ())
 handleResult [] = return $ Right ()
 handleResult _ = return $ Left P.CommonError
+
+runTransform :: [Document] -> Either P.PipelineError [WeatherT]
+runTransform [] = Left P.QueryResultError
+runTransform xs = Right $ docsToWeathers xs
 
 getMongoCredentials :: IO MongoT
 getMongoCredentials = do
@@ -68,8 +75,8 @@ connectAuthenticated (Mongo h db username' password') = do
     then return $ Right pipe
     else error "Failed to authenticate"
 
-runTransform :: T.Text -> Action IO [Document]
-runTransform _ = undefined
+runFetchData :: T.Text -> Action IO [Document]
+runFetchData date = find (select ["$match" =: ["date" =: date]] "enriched") >>= rest
 
 runAggregate :: T.Text -> Action IO [Document]
 runAggregate date = aggregate "raw" (pipeline date)

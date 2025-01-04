@@ -26,11 +26,14 @@ library
     exposed-modules:  Core.Entity.Weather
                     , Core.Gateway.PipelineGateway
                     , Core.UseCase.PipelineUseCase
+                    , Core.Mapper.DocumentToWeather
+                    , Core.Mapper.WeatherTransformer
                     , External.Pipeline.Mongo
 
     build-depends:    base ^>=4.17.2.1
                     , rio
                     , parallel
+                    , aeson
                     , mongoDB
                     , bson
 
@@ -43,6 +46,16 @@ library
 executable feature-extractor
     import:           warnings, extensions
     main-is:          FeatureExtractor/Main.hs
+    build-depends:    base ^>=4.17.2.1
+                    , pluvius
+
+    hs-source-dirs:   app
+    default-language: Haskell2010
+    ghc-options:    -O2 -threaded -rtsopts -with-rtsopts=-N
+
+executable transform-features
+    import:           warnings, extensions
+    main-is:          TransformFeatures/Main.hs
     build-depends:    base ^>=4.17.2.1
                     , pluvius
 

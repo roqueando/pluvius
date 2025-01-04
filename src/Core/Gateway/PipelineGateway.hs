@@ -1,6 +1,6 @@
 module Core.Gateway.PipelineGateway where
 
-import Core.Entity.Weather (WeatherT (..), EnrichedWeatherT (..))
+import Core.Entity.Weather (WeatherT (..))
 
 data PipelineError
   = PipelineError
@@ -12,4 +12,4 @@ data PipelineError
 class PipelineGateway a where
   calculateFeatures :: a -> String -> IO (Either PipelineError ())
   fetchData :: a -> String -> IO (Either PipelineError [WeatherT])
-  transformData :: a -> String -> IO (Either PipelineError [EnrichedWeatherT])
+  insertTransformedData :: a -> String -> IO (Either PipelineError ())
